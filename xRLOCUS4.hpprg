@@ -1,0 +1,1066 @@
+´ 
+ç N D
+´
+-105 SF @MODO APROXIMADO ON
+-22 SF @Para que acepte los infinitos
+
+@Presentacion de resultados
+IF N TYPE 0 == D TYPE 0 == AND THEN
+  LRDATA
+  CLLCD
+  ">Numero de asintotas: "
+  ASINT RçI çSTR + 1 DISP
+  ">Centroide: "
+  CENTROID çSTR + 2 DISP
+  ">Corte asintotas-eje imaginario:" 3 DISP
+  4 'linea' STO
+  1 CASINT SIZE
+  FOR a
+    " " CASINT a GET çSTR + linea DISP
+    linea 1 + 'linea' STO IF 'linea>11' THEN 0 WAIT DROP CLLCD 1 'linea' STO END
+  NEXT
+  "--------------------------------" linea DISP
+  linea 1 + 'linea' STO IF 'linea>11' THEN 0 WAIT DROP CLLCD 1 'linea' STO END
+  ">K's criticas (Tabla de Routh):" linea DISP
+  linea 1 + 'linea' STO IF 'linea>11' THEN 0 WAIT DROP CLLCD 1 'linea' STO END
+  1 Kcrit SIZE
+  FOR a
+    " " Kcrit a GET çSTR + linea DISP
+    linea 1 + 'linea' STO
+    IF 'linea>11' THEN
+      0 WAIT DROP
+      1 'linea' STO
+    END
+  NEXT
+  ">w's para esas K's criticas:" linea DISP
+  linea 1 + 'linea' STO IF 'linea>11' THEN 0 WAIT DROP CLLCD 1 'linea' STO END
+  IF WCRITICA SIZE 0 ã THEN
+    1 WCRITICA SIZE 
+    FOR a
+      " " WCRITICA a GET çSTR + linea DISP
+      linea 1 + 'linea' STO
+      IF 'linea>11' THEN
+        0 WAIT DROP
+        CLLCD
+        1 'linea' STO
+      END
+    NEXT
+  END
+  "--------------------------------" linea DISP
+  linea 1 + 'linea' STO IF 'linea>11' THEN 0 WAIT DROP CLLCD 1 'linea' STO END
+  ">Posibles puntos de dispersion:" linea DISP
+  linea 1 + 'linea' STO IF 'linea>11' THEN 0 WAIT DROP CLLCD 1 'linea' STO END
+  IF SPDispOr SIZE 0 ã THEN
+    1 SPDispOr SIZE 
+    FOR a
+      " " SPDispOr a GET çSTR + linea DISP
+      linea 1 + 'linea' STO
+      IF 'linea>11' THEN
+        0 WAIT DROP
+        CLLCD
+        1 'linea' STO
+      END
+    NEXT
+  ELSE
+    "       <Ningun pto. de disp.>" linea DISP
+    linea 1 + 'linea' STO IF 'linea>11' THEN 0 WAIT DROP CLLCD 1 'linea' STO END
+  END
+  ">K's para los ptos de dispersion" linea DISP
+  linea 1 + 'linea' STO IF 'linea>11' THEN 0 WAIT DROP CLLCD 1 'linea' STO END
+  "que cumplen bien el LR:" linea DISP
+  linea 1 + 'linea' STO IF 'linea>11' THEN 0 WAIT DROP CLLCD 1 'linea' STO END
+  IF KPDisp SIZE 0 ã THEN
+    1 KPDisp SIZE 
+    FOR a
+      " " KPDisp a GET çSTR + linea DISP
+      linea 1 + 'linea' STO
+      IF 'linea>11' THEN
+        0 WAIT DROP
+        CLLCD
+        1 'linea' STO
+      END
+    NEXT
+  ELSE
+    "       <Ninguna K valida>" linea DISP
+    linea 1 + 'linea' STO IF 'linea>11' THEN 0 WAIT DROP CLLCD 1 'linea' STO END
+  END
+  IF ANGULO TYPE 6 ã THEN @Si existe angulo de entrada salida...
+    ">Angulo de entrada/salida" linea DISP
+    linea 1 + 'linea' STO IF 'linea>11' THEN 0 WAIT DROP CLLCD 1 'linea' STO END
+    " " ANGULO çSTR + "∫" + linea DISP
+  END
+  0 WAIT DROP
+  'linea' PURGE
+  UPDIR
+  KILL
+END
+
+CLLCD
+"LUGAR DE RAICES v1.6.0"
+{
+{"Dibujo automatico" 0}
+{"Dibujo Manual" 2}
+{"Paso a paso" 1}
+{"Formulas" 3}
+}
+3 CHOOSE
+IF 0 == THEN
+  "CANCELADO: PROGRAMA TERMINADO" MSGBOX
+  KILL
+END
+
+DUP
+IF 3 == THEN
+  DROP
+  CLLCD
+  "Asintotas: |n-m|" 1 DISP
+  "  n: n∫ de ceros en LA" 2 DISP
+  "  m: n∫ de polos en LA" 3 DISP
+  "Centroide: ò=(Öpi - Özi)/|n-m|" 4 DISP
+  " (p y z: partes reales de polos/ceros" 5 DISP
+  "Hacer ROUTH: corte con eje imag." 6 DISP
+  "Angulos de salida y entrada:" 7 DISP
+  "  Öïzi - Öïpi - ïp = 180∫" 8 DISP
+  "  Öïzi - Öïpi + ïz = 180∫" 9 DISP
+  "Ptos. de dispersion/interseccion:" 10 DISP
+  " K = - DENftla/NUMftla" 11 DISP
+  0 WAIT DROP
+  CLLCD
+  " Hacer dK/ds = 0 -> sacar las S." 1 DISP
+  " De esas 'S' evaluar en K:" 2 DISP
+  " Si sale una K ä 0 => es un pto."  3 DISP
+  " de disp.; si no, desechar esa S" 4 DISP
+  " como punto de dispersion." 5 DISP
+  "Dibujar LR con todos los datos." 7 DISP
+  0 WAIT DROP
+  KILL
+END
+
+RAD
+'LRDATA' PGDIR
+'LRDATA' CRDIR
+LRDATA
+'OP' STO @Opcion principal
+
+ERASE
+
+"1) Polos y Ceros ..." CLLCD 1 DISP
+N EVAL S ZEROS 'CEROS' STO @Calculamos los ceros
+D EVAL S ZEROS 'POLOS' STO @y los polos del sistema
+
+@_____________________________CORRECCIONES EN LAS LISTAS DE POLOS Y CEROS
+IF CEROS SIZE 0 ã CEROS 0 == OR THEN @SI HAY CEROS... (SI 'CEROS' NO ES UNA LISTA VACIA...)
+  CEROS 1. * 'CEROS' STO
+  IF CEROS TYPE 5 ã THEN @PUEDE DARSE EL CASO QUE SOLO HAYA UN CERO POR LO QUE HAY QUE CONVERTIRLO EN LISTA...
+    CEROS DUP SIZE çLIST 'CEROS' STO @SI 'CEROS' NO ES UNA LISTA, LE OBLIGAMOS QUE SEA UNA LISTA
+  END
+END
+IF POLOS SIZE 0 ã POLOS 0 == OR THEN @SI HAY POLOS... (SI EL TAMA—O DE POLOS ES DISTINTO DE 0)
+  POLOS 1. * 'POLOS' STO
+  IF POLOS TYPE 5 ã THEN
+    POLOS DUP SIZE çLIST 'POLOS' STO
+  END
+END
+IF CEROS SIZE 0 == POLOS SIZE 0 == AND THEN
+  "No me vaciles..." MSGBOX
+  UPDIR
+  KILL
+END
+IF 'OP==1' THEN
+  "CEROS:                 " CEROS çSTR + MSGBOX
+  "POLOS:                 " POLOS çSTR + MSGBOX
+END
+@"1) Polos y Ceros ... OK" CLLCD 1 DISP
+
+@_____________________________PASO 1: CENTROIDE Y ASINTOTAS
+"2) Centroide y Asintotas ..." 1 DISP
+CLEAR @ IMPORTANTE PARA EL USO POSTERIOR DE DEPTH
+CEROS SIZE POLOS SIZE - ABS 'ASINT' STO 
+0 'CENTROID' STO
+IF POLOS SIZE 0 ã THEN
+  1 POLOS SIZE
+  FOR a @ CENTROIDE
+    CENTROID
+    POLOS a GET RE + 'CENTROID' STO
+  NEXT
+END
+IF CEROS SIZE 0 ã THEN
+  1 CEROS SIZE
+  FOR a
+    CENTROID
+    CEROS a GET RE - 'CENTROID' STO
+  NEXT
+END
+CENTROID ASINT / 'CENTROID' STO
+
+0 ASINT 1 -
+FOR a @ ASINTOTAS
+  2 a * 1 + 180 * ASINT / DUP
+  IF 90 MOD 0 == THEN @ SI LA ASINTOTA ESTA A 90∫
+    DROP 0 @ SUSTITUYO EL VALOR POR 0
+  ELSE
+    DEG TAN RAD @ PENDIENTE DE LA ASINTOTA a
+    CENTROID -1 * * @ CORTE DE LA ASINTOTA CON EJE IMAGINARIO
+  END
+NEXT
+DEPTH çLIST
+'CASINT' STO @ALMACENAMOS EL CORTE CON LAS ASINTOTAS
+IF 'OP==1' THEN
+  "  n∫ de asintotas: |n-m| = |" CEROS SIZE RçI çSTR + "-" + POLOS SIZE RçI çSTR + "|" + 3 DISP
+  "                         = " ASINT RçI çSTR + 4 DISP
+  "                   Öpi - Özi" 6 DISP
+  "  Centroide = òx = --------- = " 7 DISP 
+  "                     |n-m|" 8 DISP
+  "                 = " CENTROID çSTR + 9 DISP
+  0 WAIT DROP
+  "CORTES CON EJE IMAGIN: " CASINT çSTR + MSGBOX
+END
+
+@_____________________________PASO 2: ROUTH
+IF 'OP==2' THEN @Si queremos hacer el dibujo manual => no querremos hacer Routh
+  1
+ELSE
+  CLLCD
+  "3) K limites (Routh) ..." 1 DISP
+  "OBTENER Klim CON ROUTH?"
+  {
+  {"SI" 0}
+  {"NO" 1}
+  } 1 CHOOSE
+  IF 0 == THEN
+    UPDIR
+    "CANCELADO: PROGRAMA TERMINADO" MSGBOX
+    KILL
+  END
+END
+
+IF 0 == THEN @si 'SI' se quiere hacer ROUTH
+"Q(s)=" N K * D + EVAL çSTR + MSGBOX
+1 'GROUTH' STO
+ @_________________________SUB-PROGRAMA PARA TABLA DE ROUTH
+'TROU' PGDIR
+'TROU' CRDIR
+UPDIR
+"GENERAR ROUTH..."
+{
+{"Q:" "MATRIZ (no vector) de coef. de S"}
+}
+{1 0}
+{}
+{[[1,17,79,'63+K','2.8*K','5*K']]}
+@{[[1,15,'78+K',164,'120+9*K']]}
+INFORM
+LRDATA
+TROU
+DROP
+IFERR 1 GET THEN
+  "ERROR: PROGRAMA TERMINADO"
+  UPDIR UPDIR
+  CLLCD MSGBOX
+  CLEAR
+  KILL
+ELSE
+'Q' STO
+Q
+SIZE
+'QSIZE' STO
+QSIZE
+1 GET
+
+IF 1 > THEN
+  "Dimensiones incorrectas: ROUTH CANCELADO"
+  UPDIR
+  CLLCD MSGBOX @ BUG! corregir si eso
+ELSE
+  QSIZE
+  2 GET
+  'QSIZE' STO
+
+  QSIZE
+  2 /
+  0 RND
+  QSIZE
+  SWAP
+  2
+  çLIST
+  'DIMENSIONES' STO
+  DIMENSIONES
+  0 CON
+  'MRou' STO
+
+  0 'LOADING' STO
+
+  1
+  QSIZE
+  FOR a
+    QSIZE
+    2 /
+    0
+    RND
+    1 SWAP
+
+    FOR b
+
+      @CARGA DE LA TR...
+      CASE
+        'LOADING==0' THEN
+          "              ."
+          1 'LOADING' STO
+        END
+        'LOADING==1' THEN
+          "              .."
+          2 'LOADING' STO
+        END
+        'LOADING==2' THEN
+          "              ..."
+          3 'LOADING' STO
+        END
+        'LOADING==3' THEN
+          "              ...."
+          0 'LOADING' STO
+        END
+      END
+      4 DISP
+
+      IF 'a==1' THEN
+        2 b *
+        1 -
+        'TEMP' STO
+        'Q' TEMP GET
+        'TEMP' STO
+        'MRou' {a b} TEMP PUT
+        { TEMP } PURGE
+      END
+      IF 'a==2' THEN
+         QSIZE b /
+         IF 2 ä THEN
+           2 b *
+           'TEMP' STO
+           'Q' TEMP GET
+           'TEMP' STO
+           'MRou' {a b} TEMP PUT
+           { TEMP } PURGE
+         END
+      END
+      IF 'a>2' THEN
+        IF 'a==QSIZE' THEN @Si estamos en la ultima fila...
+          'MRou'
+          'a-2' EVAL @Dos filas antes
+          QSIZE 2 / 0 RND 1 - @Penultima columna
+          2 çLIST
+          GET
+          'MRou' SWAP {a 1} SWAP PUT
+        ELSE
+          QSIZE b /
+          IF 2 > THEN
+            'a-1' EVAL 'a1' STO
+            'a-2' EVAL 'a2' STO
+            'b+1' EVAL 'b1' STO
+            'MRou' {a1 1} GET
+            'MRou' {a2 b1} GET
+            * EVAL
+            'MRou' {a2 1} GET
+            'MRou' {a1 b1} GET
+            * EVAL
+            - EVAL
+            'MRou' SWAP {a b} SWAP PUT
+          END
+        END
+      END
+    NEXT
+  NEXT
+  {'a1' 'a2' 'b1' 'QSIZE' 'DIMENSIONES' 'LOADING'} PURGE
+
+  @___________________________AN¡LISIS DE ESTABILIDAD
+
+    "Condiciones Necesarias:" MSGBOX @Condiciones NECESARIAS
+    1 Q SIZE 2 GET
+    FOR a
+      Q {1 a} GET 'TEMP' STO
+      'TEMP>0' EVAL 'TEMP' STO
+      TEMP K SOLVE DUP
+      IF SIZE 0 ã THEN @Si existe una solucion
+        çSTR MSGBOX
+      ELSE
+        DROP @Si no existe, la quitamos
+      END
+    NEXT
+
+    "Condiciones Suficientes:" MSGBOX @Condiciones SUFICIENTES
+    1 Q SIZE 2 GET
+    FOR a
+      MRou {a 1} GET 'TEMP' STO
+      'TEMP>0' EVAL 'TEMP' STO
+      TEMP K SOLVE DUP
+      IF SIZE 0 ã THEN @Si existe una solucion
+        çSTR "s^" Q SIZE 2 GET a - RçI çSTR + ": " + SWAP + MSGBOX
+      ELSE
+        DROP @Si no existe, la quitamos
+      END
+    NEXT
+
+    @___________________________PERÕODO DE LAS OSCILACIONES
+    "K mas restrictiva para:"
+    {"Sin restricciones" 0}
+    3 Q SIZE 2 GET
+    FOR a
+      "s^" Q SIZE 2 GET a - RçI çSTR + ": " +
+      MRou {a 1} GET
+      çSTR + a 2 çLIST
+    NEXT
+    Q SIZE 2 GET 2 - 1 + çLIST
+    1 CHOOSE
+    IF 0 == THEN
+      {'Q' 'TEMP'} PURGE
+      "CANCELADO: PROGRAMA TERMINADO" MSGBOX
+      UPDIR UPDIR
+      KILL
+    END
+    DUP @ duplicamos la opcion elegida para hacer el siguiente IF
+    IF 0 ã THEN
+      'AUX' STO @Almacenamos la posicion de la eq. que nos den
+      MRou {AUX 1} GET K ZEROS 'KS' STO @Sacamos la lista de las Ks oscilatorias (criticas)
+      
+      MRou AUX 1 - 1 2 çLIST AUX 1 - Q SIZE 2 GET 2 / 0 RND 2 çLIST SUB @Formamos el polinomio auxiliar
+      'AUX2' STO
+      Q SIZE 2 GET AUX 1 - - 'SINDICE' STO
+      1 AUX2 SIZE 2 GET
+      FOR a
+        AUX2 {1 a} GET S SINDICE 2 a * 2 - - ^ *
+      NEXT
+      1 AUX2 SIZE 2 GET 1 -
+      FOR a
+        +
+      NEXT
+      EVAL 'PAUX' STO @Polinomio auxiliar
+      
+      "Polinomio auxiliar A(S):   " PAUX çSTR + MSGBOX
+      {'AUX' 'AUX2'} PURGE
+      IF KS SIZE 1 == THEN KS 1 çLIST 'KS' STO END @Correcion de la lista de Ks
+      1 KS SIZE
+      FOR a
+        KS a GET 
+        DUP
+        IF 0 â NOT THEN @La K que nos interesa no puede ser â a 0, asi que haciendo esto nos quitamos pasos
+          'K' STO
+          PAUX EVAL DUP
+          IF TYPE 0 == THEN @ Por si PAUX se haciera 0 (0 'S' SOLVE casca un '?')
+            DROP
+            0 'TMP' STO
+          ELSE
+            S ZEROS 'TMP' STO
+          END
+
+          "Para K=" K çSTR + "    " +
+          "A(S)=" + PAUX EVAL çSTR +
+          MSGBOX
+
+          "Como A(S)=0 =>          "
+          "w=" + TMP IM çSTR + " rd/seg." +
+          MSGBOX
+
+          TMP SIZE
+          IF 1 > THEN
+            1 TMP SIZE
+            FOR b
+              TMP b GET
+            NEXT
+          ELSE
+            TMP
+          END
+        ELSE
+          DROP
+        END
+      NEXT
+      DEPTH çLIST @ CREAMOS LA LISTA DE w CRITICAS
+    ELSE @SI NO HAY CORTE CON LOS EJES...
+      "No hay corte con los ejes: se usara una K=100 como critica" MSGBOX
+      100 1 çLIST 'KS' STO @PRUEBA !!!
+      DROP 0 çLIST @ Este para que se almacene en la variable WCRITICA (el DROP se carga el DUP hecho arriba)
+    END
+  END
+  KS
+  {'TEMP' 'TMP' 'KS' 'SINDICE' 'K'} PURGE
+END
+MRou
+UPDIR
+'MRou' STO @Para salvar la tabla de Routh ya que me cargo el resto de datos de ROUTH al finalizar el programa
+'Kcrit' STO @ ALMACENAMOS LAS Ks CRITICAS (KS)
+'WCRITICA' STO @ Y TAMBIEN LAS ws PARA ESAS Ks CRITICAS (La lista que se crea arriba con las w)
+IF WCRITICA SIZE 1 == THEN WCRITICA 1 çLIST 'WCRITICA' STO END @ARREGLO DE LA LISTA WCRITICA...
+
+ @_____________________FIN SUB-PROGRAMA PARA TABLA DE ROUTH
+
+ELSE @ si 'NO' se quiere hacer Routh
+  CLLCD
+  "3) K limites (Routh) ..." CLLCD 1 DISP
+  0 'GROUTH' STO
+  IF 'OP==2' THEN
+    "Dibujo manual de LR: Introducir a continuacion las K donde se pausara el dibujado del LR" MSGBOX
+  ELSE
+    "No se hace Routh: introducir a mano la lista de K importantes" MSGBOX
+  END
+  "K importantes"
+  {
+  {"Ks:" "Lista de Ks importantes (manual)" 5}
+  }
+  {} DUP
+  {{1 20 50 100}} INFORM
+  IF 0 == THEN
+    "CANCELADO: PROGRAMA TERMINADO" MSGBOX
+    UPDIR
+    KILL
+  END
+  1 GET 'Kcrit' STO
+  {0} 'WCRITICA' STO @Se aÒade esto porque luego a la hora de mostrar los resultados se necesita que WCRITICA contenga algo
+END
+
+@_____________________________PASO 4: ANGULOS DE ENTRADA/SALIDA
+IF 'OPã2' THEN @Si no estamos en modo automatico Û paso a paso nos saltamos este punto
+CLLCD
+"4) Angulos de ent./sal. ..." 1 DISP
+DEG
+IF CEROS SIZE 0 ã THEN @Comprobamos que existe algun cero
+  1 CEROS SIZE @Si existe repasamos la lista de ceros con un FOR
+  FOR a
+    CEROS a GET @Cogemos la parte imaginaria de cada cero y ...
+    IF IM 0 > THEN @...miramos a ver si es complejo (si tiene parte imaginaria)
+      IF Sd TYPE 6 == THEN @Si no habiamos guardado antes ningun dato en Sd...
+        CEROS a GET 'Sd' STO @...pues lo almacenamos
+      ELSE @Si ya habia algun dato guardado en Sd...
+        Sd RE
+        CEROS a GET RE
+        IF < THEN
+          CEROS a GET 'Sd' STO @Si Re(Sd)<Re(Ceros(a)) nos tendremos que quedar con Ceros(a)
+        END
+      END
+    END
+  NEXT
+END
+IF POLOS SIZE 0 ã THEN
+  1 POLOS SIZE @Si existe repasamos la lista de ceros con un FOR
+  FOR a
+    POLOS a GET @Cogemos la parte imaginaria de cada cero y ...
+    IF IM 0 > THEN @...miramos a ver si es complejo (si tiene parte imaginaria; nos quedamos con la positiva)
+      IF Sd TYPE 6 == THEN @Si no habiamos guardado antes ningun dato en Sd...
+        POLOS a GET 'Sd' STO @...pues lo almacenamos
+      ELSE @Si ya habia algun dato guardado en Sd...
+        Sd RE
+        POLOS a GET RE
+        IF < THEN
+          POLOS a GET 'Sd' STO @Si Re(Sd)<Re(Ceros(a)) nos tendremos que quedar con Ceros(a)
+        END
+      END
+    END
+  NEXT
+END
+IF Sd TYPE 6 == THEN @Aqui calculamos el angulo de entrada salida para ese posible Sd que nos haya dado
+  IF 'OP==1' THEN
+    "No hay ni polos ni ceros compejos, con lo que no existen angulos de entrada/salida" MSGBOX
+  END
+ELSE
+  IF 'OP==1' THEN
+    "El polo/cero dominante es " Sd çSTR + MSGBOX
+  END
+  0 'ANGULO' STO
+  IF CEROS SIZE 0 ã THEN
+    1 CEROS SIZE
+    FOR a @Recorremos primero los ceros
+      CEROS a GET 'tmp' STO @vamos cogiendo ceros y guardandolos en tmp
+      IF 'tmpãSd' THEN @No tenemos que calcular angulos entre el propio cero consigo mismo
+        " Öïz = " 3 DISP
+        IF tmp RE Sd RE > THEN @Si el cero esta a la derecha del polo/cero dominante
+          Sd IM Sd RE ABS tmp RE + / ATAN 'tmp2' STO tmp2
+          180 SWAP -
+          ANGULO + 'ANGULO' STO
+          "180-atg(" Sd IM 2 RND çSTR + "/(" + Sd RE 2 RND ABS çSTR + "+" + tmp RE 2 RND çSTR + "))" + 
+        ELSE @Si por el contrario el polo/cero esta a la izquierda
+          Sd IM Sd RE tmp RE ABS + / ATAN 'tmp2' STO tmp2
+          ANGULO + 'ANGULO' STO
+          "atg(" Sd IM 2 RND çSTR + "/(" + Sd RE 2 RND çSTR + "+" + tmp RE 2 RND ABS çSTR + "))" + 
+        END
+        IF a CEROS SIZE == NOT THEN
+          "+" + 
+        END
+        " (=" + tmp2 2 RND çSTR + ")" +
+        4 DISP
+        IF 'OP==1' THEN
+          0 WAIT DROP @Para ver el calculo paso a paso de cada angulo (version 4)
+        END
+      END
+    NEXT
+  END
+  " Öïz = " ANGULO 3 RND çSTR + "∫" + 5 DISP
+  IF 'OP==1' THEN
+    0 WAIT DROP
+  END
+  IF POLOS SIZE 0 ã THEN
+    1 POLOS SIZE
+    FOR a @y luego los polos
+      POLOS a GET 'tmp' STO @vamos cogiendo ceros y guardandolos en tmp
+      IF 'tmpãSd' THEN @Lo mismo: no podemos hacer angulo entre el propio polo consigo mismo
+        " - Öïp = " 7 DISP
+        IF tmp RE Sd RE > THEN @Si el cero esta a la derecha del polo/cero dominante
+          Sd IM Sd RE ABS tmp RE + / ATAN 'tmp2' STO tmp2
+          180 SWAP -
+          ANGULO SWAP - 'ANGULO' STO
+          "180-atg(" Sd IM 2 RND çSTR + "/(" + Sd RE 2 RND ABS çSTR + "+" + tmp RE 2 RND çSTR + "))" + 
+        ELSE @Si por el contrario el polo/cero esta a la izquierda
+          Sd IM Sd RE tmp RE ABS + / ATAN 'tmp2' STO tmp2
+          ANGULO SWAP - 'ANGULO' STO
+          "atg(" Sd IM 2 RND çSTR + "/(" + Sd RE 2 RND ABS çSTR + "+" + tmp RE 2 RND çSTR + "))" + 
+        END
+        IF a POLOS SIZE == NOT THEN
+          "+" + 
+        END
+        " (=" + tmp2 2 RND çSTR + ")" +
+        8 DISP
+        IF 'OP==1' THEN
+          0 WAIT DROP @Para ver el calculo paso a paso de cada angulo (version 4)
+        END
+      END
+    NEXT
+  END
+  " Öïz - Öïp = " ANGULO 3 RND çSTR + "∫" + 10 DISP
+  IF 'OP==1' THEN
+    0 WAIT DROP
+  END
+
+  IF CEROS SIZE 0 ã THEN
+    1 CEROS SIZE
+    FOR a
+      CEROS a GET
+      IF Sd == THEN @Si el polo/cero dominante es un cero...
+        180 ANGULO -1 * + 'ANGULO' STO
+        IF 'ANGULOä360' 'ANGULOâ-360' OR THEN
+          ANGULO 360 /
+          0 RND
+          ANGULO SWAP 360 * -
+          'ANGULO' STO
+        END
+        IF 'OP==1' THEN
+          "           = " ANGULO 4 RND çSTR + "∫" + 11 DISP
+          0 WAIT DROP
+          "El angulo de entrada sera:" ANGULO çSTR + "∫" + MSGBOX
+        END
+      END
+    NEXT
+  END
+  IF POLOS SIZE 0 ã THEN
+    1 POLOS SIZE
+    FOR a
+      POLOS a GET
+      IF Sd == THEN @Si el polo/cero dominante es un polo...
+        -180 ANGULO + 'ANGULO' STO
+        IF 'ANGULOä360' 'ANGULOâ-360' OR THEN
+          ANGULO 360 /
+          0 RND
+          ANGULO SWAP 360 * -
+          'ANGULO' STO
+        END
+        IF 'ANGULO<0' THEN
+          ANGULO 360 + 'ANGULO' STO
+        END
+        IF 'OP==1' THEN
+          "           = " ANGULO 4 RND çSTR + "∫" + 11 DISP
+          0 WAIT DROP
+          "El angulo de salida sera: " ANGULO çSTR + "∫" + MSGBOX
+        END
+      END
+    NEXT
+  END
+END
+{'tmp' 'tmp2'} PURGE
+RAD
+ELSE
+  "- Angulos de ent./sal. ... N/D" 4 DISP
+END
+
+@_____________________________PASO 5: PUNTOS DE DISPERSION
+IF 'OPã2' THEN @Si no estamos en modo manual
+CLLCD
+"5) Puntos de dispersion ..." 1 DISP
+CLEAR    @IMPORTANTE! PARA FUNCIONAR LUEGO CON EL DEPTH
+D N / -1 * EVAL 'KSOL' STO
+KSOL S DERIV 'DKSOL' STO
+DKSOL S ZEROS 'SPDisp' STO @POSIBLES PTOS DE DISPERSION
+IF 'OP==1' THEN
+  "       " D EVAL çSTR + 3 DISP
+  "K = - ---------------------" 4 DISP
+  "       " N EVAL çSTR + 5 DISP
+  "dK/dS=" 7 DISP
+  " " D 'S' DERIV N * N 'S' DERIV D * - EVAL çSTR + 8 DISP
+  "---------------------------------" 9 DISP
+  " " N 2 ^ EVAL çSTR + 10 DISP
+  0 WAIT DROP @ Wait de la version 4
+END
+IF SPDisp SIZE 0 == THEN
+  "No hay ni un posible punto de dispersion..." MSGBOX
+  {0} 'KPDisp' STO @Se pone esto por lo mismo que se pone WCRITICA aunque no exista
+ELSE
+  IF 'OP==1' THEN @ SI ESTAMOS EN LR PASO A PASO
+    CLLCD
+    "5) Puntos de dispersion ..." 1 DISP
+    "Para dK=0 => S= " SPDisp çSTR + MSGBOX
+    "Esos eran los posibles puntos de dispersion. De ellos nos quedamos con..." MSGBOX
+  END
+  IF SPDisp SIZE 1 == THEN @ SI SOLO HAY UN POSIBLE PUNTO DE DISPERSION
+    SPDisp 1 çLIST 'SPDisp' STO
+    SPDisp 'SPDispOr' STO @Guardamos asi los puntos de dispersion originales
+    SPDisp 1 GET 'S' STO
+    KSOL EVAL DUP DUP
+    IF IM 0 == SWAP RE 0 ä AND NOT THEN @ SI NO ES PTO DE DISPERSION...
+      IF 'OP==1' THEN
+        "s= " S çSTR + " K= " + KSOL EVAL çSTR + " NO SIRVE" + MSGBOX
+      END
+      DROP @LO TIRAMOS
+      'SPDisp' 1 0 PUT @Y PONEMOS UN 0 EN SU LUGAR
+    ELSE @ SI ES PUNTO DE DISPERSION ..
+      IF 'OP==1' THEN @ .. Y ESTAMOS EN EL MODO 'PASO A PASO'
+        "s= " SPDisp a GET çSTR +
+        " K= " + KSOL EVAL çSTR + MSGBOX
+      END
+    END
+    DEPTH çLIST 
+    DUP IF SIZE 0 == NOT THEN
+      RE
+    ELSE
+      DROP
+    END
+    IF DEPTH 0 == THEN
+      "NINGUNO. Ninguno es punto de dispersion" MSGBOX
+      {0}
+    END
+    'KPDisp' STO
+    {'KSOL' 'DKSOL' 'S'} PURGE
+  ELSE @ SI HAY MAS DE UN POSIBLE PUNTO DE DISPERSION
+    SPDisp 'SPDispOr' STO @Guardamos asi los puntos de dispersion originales
+    1 SPDisp SIZE
+    FOR a
+      SPDisp a GET
+      'S' STO
+      KSOL EVAL DUP DUP
+      IF IM 0 == SWAP RE 0 ä AND NOT THEN @ SI NO ES PTO DE DISPERSION...
+        IF 'OP==1' THEN
+          "s= " S çSTR + " K= " + KSOL EVAL çSTR + " NO SIRVE" + MSGBOX
+        END
+        DROP @TIRAMOS EL DATO ..
+        'SPDisp' a 0 PUT @Y PONEMOS UN 0 EN SU LUGAR (PARA LUEGO EL AJUSTE DE LA VENTANA DE DIBUJO)
+      ELSE @ SI ES PUNTO DE DISPERSION ..
+        IF 'OP==1' THEN @ .. Y ESTAMOS EN EL MODO 'PASO A PASO'
+          "s= " SPDisp a GET çSTR +
+          " K= " + KSOL EVAL çSTR + MSGBOX
+        END
+      END
+    NEXT
+    DEPTH çLIST 
+    DUP IF SIZE 0 == NOT THEN @Si la lista creada no es una lista vacia, nos quedamos
+      RE @con la parte real de los valores calculados
+    ELSE
+      DROP
+    END
+    IF DEPTH 0 == THEN
+      "NINGUNO. Ninguno es punto de dispersion" MSGBOX
+      {0}
+    END
+    'KPDisp' STO @ AQUI ESTARAN LAS Ks VALIDAS
+    {'KSOL' 'DKSOL' 'S'} PURGE
+  END
+END
+ELSE @Si estamos en modo manual ponemos a 0 estas listas
+  {0} 'SPDisp' STO
+  {0} 'KPDisp' STO
+END
+@_____________________________AJUSTE DE LA VENTANA DE DIBUJO (REPRESENTACI”N DEL LR)
+  CLLCD
+  "- Autoajustando grafico ..." 1 DISP
+  0 'Xleft' STO
+  0 'Xright' STO
+  0 'Yup' STO
+  0 'Ydown' STO
+  1.5 'supY' STO @SUPLEMENTO A A—ADIR EN Y POR SI HAY CORTE CON LAS ASINTOTAS
+
+  IF SPDisp SIZE 0 ã THEN @AJUSTE SEGUN LOS PUNTOS DE DISPERSION...
+    1 SPDisp SIZE
+    FOR a
+      SPDisp a GET RE DUP DUP DUP
+      IF Xleft < THEN
+        'Xleft' STO
+      ELSE
+        DROP
+      END
+      IF Xright > THEN
+        'Xright' STO
+      ELSE
+        DROP
+      END
+      SPDisp a GET IM DUP DUP DUP
+      IF Ydown < THEN
+        'Ydown' STO
+      ELSE
+        DROP
+      END
+      IF Yup > THEN
+        'Yup' STO
+      ELSE
+        DROP
+      END
+    NEXT
+  END
+  IF 'GROUTH==0' THEN
+    IF CASINT SIZE 0 ã THEN @AJUSTE SEGUN CORTE CON ASINTOTAS...
+      1 CASINT SIZE
+      FOR a
+        CASINT a GET DUP DUP DUP
+        IF Ydown < THEN
+          'Ydown' STO
+          0 'supY' STO
+        ELSE
+          DROP
+        END
+        IF Yup > THEN
+          'Yup' STO
+          0 'supY' STO
+        ELSE
+          DROP
+        END
+      NEXT
+    END
+  ELSE
+    IF WCRITICA SIZE 0 ã THEN @AJUSTE SEGUN LOS PUNTOS PARA Klim (es decir segun las w)
+      1 WCRITICA SIZE
+      FOR a
+        WCRITICA a GET IM DUP DUP DUP
+        IF Ydown < THEN
+          'Ydown' STO
+        ELSE
+          DROP
+        END
+        IF Yup > THEN
+          'Yup' STO
+        ELSE
+          DROP
+        END
+      NEXT
+    END
+  END
+  IF CEROS SIZE 0 ã THEN @AJUSTE SEGUN LOS CEROS...
+    1 CEROS SIZE
+    FOR a
+      CEROS a GET RE DUP DUP DUP
+      IF Xleft < THEN
+        'Xleft' STO
+      ELSE
+        DROP
+      END
+      IF Xright > THEN
+        'Xright' STO
+      ELSE
+        DROP
+      END
+      CEROS a GET IM DUP DUP DUP
+      IF Ydown < THEN
+        'Ydown' STO
+      ELSE
+        DROP
+      END
+      IF Yup > THEN
+        'Yup' STO
+      ELSE
+        DROP
+      END
+    NEXT
+  END
+  IF POLOS SIZE 0 ã THEN @AJUSTE SEGUN LOS POLOS...
+    1 POLOS SIZE
+    FOR a
+      POLOS a GET RE DUP DUP DUP
+      IF Xleft < THEN
+        'Xleft' STO
+      ELSE
+        DROP
+      END
+      IF Xright > THEN
+        'Xright' STO
+      ELSE
+        DROP
+      END
+      POLOS a GET IM DUP DUP DUP
+      IF Ydown < THEN
+        'Ydown' STO
+      ELSE
+        DROP
+      END
+      IF Yup > THEN
+        'Yup' STO
+      ELSE
+        DROP
+      END
+    NEXT
+    Xleft 1 - 'Xleft' STO
+    Xright 1 + 'Xright' STO
+    Yup supY + 'Yup' STO
+    Ydown supY - 'Ydown' STO
+
+  END
+
+  IF 'OP==2' THEN
+    CLLCD
+    "- Ajuste manual de ejes ..." 1 DISP 0.5 WAIT
+    "EJES"
+    {
+    {"Xmin:" "Eje x, valor minimo" 0}
+    {"Xmax:" "Eje x, valor maximo" 0}
+    {"Ymin:" "Eje y, valor minimo" 0}
+    {"Ymax:" "Eje y, valor maximo" 0}
+    }
+    {2 0} {}
+    Xleft Xright Ydown Yup 4 çLIST
+    INFORM
+    IF 0 == THEN
+      "CANCELADO: PROGRAMA TERMINADO" MSGBOX
+      UPDIR
+      KILL
+    END
+    DUPDUP DUP
+    1 GET SWAP 2 GET XRNG
+    3 GET SWAP 4 GET YRNG
+    CLLCD
+    "- Ajuste manual de ejes ... OK" 1 DISP
+  ELSE
+    Xleft Xright XRNG
+    Ydown Yup YRNG
+    CLLCD
+    "- Autoajustando grafico ... OK" 1 DISP
+  END
+
+@_____________________________COLOCACION DE LOS CEROS Y LOS POLOS
+CLLCD
+"        REPRESENTANDO LR" 3 DISP 0.5 WAIT
+IF CEROS SIZE 0 ã THEN @ SI EXISTE/N ALGUN/OS CERO/S LO/S REPRESENTAMOS
+  1 CEROS SIZE @ CEROS
+  FOR a
+    PICT
+    CEROS a GET EVAL DUP
+    IF TYPE 1 ã THEN
+      0 RçC
+    END
+    "o" 1 çGROB REPL
+  NEXT
+END
+IF POLOS SIZE 0 ã THEN @SI EXISTE/N ALGUN/OS POLO/S LO/S REPRESENTAMOS
+  1 POLOS SIZE @ POLOS
+  FOR a
+    PICT
+    POLOS a GET EVAL DUP
+    IF TYPE 1 ã THEN
+      0 RçC
+    END
+    "x" 1 çGROB REPL
+  NEXT
+END
+"Representar con..."
+{
+{".. puntos" 0}
+{".. lineas" 1}
+}
+1 CHOOSE
+IF 0 == THEN
+  "CANCELADO: PROGRAMA TERMINADO" MSGBOX
+  UPDIR
+  KILL
+END
+'OP1' STO
+
+@_____________________________C¡LCULO Y DIBUJO DEL LUGAR DE LAS RAICES
+
+IF CEROS SIZE POLOS SIZE â THEN @COMPROBAMOS SI EL N∫ DE POLOS ES >= QUE EL DE CEROS
+  D N K * + EVAL 'MDEN' STO
+ELSE
+  N D K * + EVAL 'MDEN' STO @ESTO EN REALIDAD NO ES ASI, PERO A EFECTOS PRACTICOS NOS VALE DE SOBRA
+END
+
+CLEAR @ LIMPIA LA PILA POR SI ACASO
+0  @ PARA OBLIGAR QUE LA Klist EMPIECE EN 0
+1 Kcrit SIZE @ Ks importantes de limite de estabilidad
+FOR a
+  Kcrit a GET
+NEXT
+IF KPDisp SIZE 0 ã THEN @ Si hay alguna K importante de puntos de dispersion...
+  1 KPDisp SIZE
+  FOR a
+    KPDisp a GET
+  NEXT
+END
+DEPTH çLIST SORT 'Klist' STO @ LISTA ORDENADA CON LAS Ks IMPORTANTES
+1 Klist SIZE @ AHORA, SI HAY ALGUNA K NEGATIVA, LA PONEMOS A 0
+FOR a
+  Klist a GET
+  IF 0 < THEN
+    'Klist' a 0 PUT
+  END
+NEXT
+
+0 'Kmax' STO
+1 Klist SIZE
+FOR a
+  Klist a GET DUP
+  IF Kmax > THEN 'Kmax' STO ELSE DROP END @ Km·xima
+NEXT
+1 Klist SIZE
+FOR a
+  Klist a GET
+NEXT
+2 Kmax * DEPTH çLIST 'Klist' STO
+
+IF POLOS SIZE 0 == THEN
+  CEROS 'POLOS1' STO @Si resulta que no hay mas que ceros en el sistema (es decir, ningun polo)...
+ELSE
+  POLOS 'POLOS1' STO
+END
+@CEROS 'CEROS1' STO
+CLLCD
+{#0 #0} PVIEW
+
+2 Klist SIZE @ DIBUJO DEL LUGAR DE LAS RAICES
+FOR c
+IF Klist c 1 - GET Klist c GET < THEN
+  0 'a' STO
+  DO
+    a Klist c GET Klist c 1 - GET - 10 / * Klist c 1 - GET + @FACTOR MULTIPLICATIVO DE K (DE a REALMENTE)
+    0.001 + 'K' STO
+
+    MDEN EVAL S ZEROS DUP
+    IF SIZE 1 == THEN 1 çLIST END
+    'POLOS2' STO
+
+    1 POLOS1 SIZE
+    FOR b
+      POLOS1 b GET DUP IF TYPE 1 ã THEN 0 RçC END
+      IF 'OP1==0' THEN
+        PIXON
+      ELSE
+        POLOS2 b GET DUP IF TYPE 1 ã THEN 0 RçC END LINE
+      END
+    NEXT
+    POLOS2 'POLOS1' STO
+
+    a 1 + 'a' STO
+    
+  UNTIL 'aä10' END
+  IF Klist c GET Kmax 2 * ã 'OPã2' AND THEN
+    "K=" Klist c GET çSTR + MSGBOX
+  END
+END
+NEXT
+
+0 WAIT DROP
+DRAX @DIBUJAMOS LOS EJES DE COORDENADAS
+0 WAIT DROP
+
+{'K' 'a' 'Klist' 'MDEN' 'PPAR' 'GROUTH' 'POLOS1' 'POLOS2' 'OP' 'OP1'} PURGE
+{'Kmax' 'supY' 'Ydown' 'Yup' 'Xright' 'Xleft' 'Sd'} PURGE
+'TROU' PGDIR
+UPDIR
+ª
+ª
